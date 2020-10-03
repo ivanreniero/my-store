@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import IconButton from '@material-ui/core/IconButton'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import Badge from '@material-ui/core/Badge';
+import { TotalContext } from '../context/totalContext';
 
 function CartIcon(){
+    const [total, setTotal] = useContext(TotalContext);
+
     return(
         <IconButton color="primary" aria-label="add to shopping cart">
-            <ShoppingCartIcon />
+            <Badge badgeContent={total} color="primary">     
+                <ShoppingCartIcon />
+            </Badge>
         </IconButton>
     )
 }

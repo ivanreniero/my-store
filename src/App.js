@@ -7,6 +7,8 @@ import ProductDetailContainer from './components/Products/ProductDetailContainer
 import About from './components/About';
 import Contact from './components/Contact';
 import Cart from './components/Cart/Cart';
+import CartProvider from './context/cartContext';
+import TotalProvider from './context/totalContext';
 import {
   BrowserRouter as Router,
   Switch,
@@ -18,12 +20,14 @@ function App() {
   return (
     <div className="App">      
       <Router>
+            <CartProvider>
+              <TotalProvider>        
         <NavBar />  
           <Switch>
             <Route path="/products/:productId" >
               <ProductDetailContainer />
             </Route>
-            <Route path="/products">
+            <Route exact path="/products">
               <Products />
             </Route>
             <Route path="/about">
@@ -39,6 +43,8 @@ function App() {
               <Home greetings="Welcome to the Store"/>
             </Route>
           </Switch>
+            </TotalProvider>
+            </CartProvider>
     </Router> 
    
     </div>
