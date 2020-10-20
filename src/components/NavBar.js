@@ -5,6 +5,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import CartIcon from './CartIcon';
+import SideDrawer from "./Menu/SideDrawer";
+
+
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -26,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
   },
   link: {
     margin: theme.spacing(1, 1.5),
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
   }
 }));
 
@@ -33,16 +39,16 @@ const Navbar = () => {
   const classes = useStyles();
   return (
     <div className="NavBar">
-      <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
-        <Toolbar className={classes.toolbar}>
+      <AppBar position="static" color="default">
+        <Toolbar>
           <Typography variant="h6" color="inherit"  className={classes.toolbarTitle}>
-            My Store
+            Positano
           </Typography>
           <nav>
-            <Link variant="button" color="textPrimary" className={classes.link} to="/" >Home</Link>
-            <Link variant="button" color="textPrimary" className={classes.link} to="/products">Products</Link>
-            <Link variant="button" color="textPrimary" className={classes.link} to="/about">About</Link>
-            <Link variant="button" color="textPrimary" className={classes.link} to="/contact">Contact</Link>       
+            <Link variant="button" color="textPrimary" className={classes.link} to="/" >Inicio</Link>
+            <Link variant="button" color="textPrimary" className={classes.link} to="/products/category/pizza">Pizzas</Link>
+            <Link variant="button" color="textPrimary" className={classes.link} to="/products/category/hamburguesa">Hamburguesas</Link>
+            <Link variant="button" color="textPrimary" className={classes.link} to="/products/category/guarnicion">Guarniciones</Link>      
             <Link variant="button" color="textPrimary" className={classes.link} to="/cart"><CartIcon /></Link>
           </nav> 
         </Toolbar>

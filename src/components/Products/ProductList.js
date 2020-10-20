@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import ProductsAPI from '../../api/ProductsAPI';
 import Grid from '@material-ui/core/Grid';
 import ProductCard from './ProductCard';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
+import {getFirestore} from '../../firebase/index';
 
 const useStyles = makeStyles(theme => ({
     center : {
@@ -16,23 +16,34 @@ const useStyles = makeStyles(theme => ({
     }    
   }))
 
-function ProductList() {
+function ProductList(props) {
     const classes = useStyles();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-
+ 
     useEffect(()=>{
-        ProductsAPI.getProducts()
-        .then(
-            (result) => {
-              setProducts(result);
-              setLoading(false);
-            },
-            (error) => {
-              alert("Error loading products")
-            }
-        )
-    },[])
+        const db = getFirestore();
+        const productsCollection = db.collection("products");
+        if (props.categoryId){
+            const filteredProductsCollection = productsCollection.where('categoryId','==',props.categoryId);
+            filteredProductsCollection.get().then((querySnapshot) => {
+                setProducts(querySnapshot.docs.map(doc=> { return ({id:doc.id, ...doc.data()})}));    
+            }).catch((error) => {
+                alert("Error loading products");
+            }).finally(() => {
+                setLoading(false);
+            });
+        } else {
+            productsCollection.get().then((querySnapshot) => {
+                setProducts(querySnapshot.docs.map(doc=> { return ({id:doc.id, ...doc.data()})}));    
+            }).catch((error) => {
+                alert("Error loading products");
+            }).finally(() => {
+                setLoading(false);
+            });
+        }
+       
+    },[props.categoryId])
 
     if (loading){
         return (
@@ -42,6 +53,7 @@ function ProductList() {
         )
     } else {
         return (
+            <div>
             <Grid container spacing={3}>
                 {products.map(product => 
                     <Grid key={product.id} item xs={4}>
@@ -55,8 +67,9 @@ function ProductList() {
                     </Grid>
                 )}
             </Grid>
+            </div>
         )
     }
 }
 
-export default ProductList
+export default ProductList;

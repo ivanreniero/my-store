@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import ProductsAPI from '../../api/ProductsAPI';
 import ProductDetail from './ProductDetail';
 import {useParams} from 'react-router-dom';
+import {getFirestore} from '../../firebase/index';
 
 function ProductDetailContainer() {
     const { productId } = useParams();
@@ -9,15 +10,17 @@ function ProductDetailContainer() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        ProductsAPI.getProduct(productId).then(
-            (product) => {
-                setProduct(product);
-                setLoading(false);
-              },
-              (error) => {
-                alert("Error loading product")
-              }
-        );  
+        const db = getFirestore();
+        const productsCollection = db.collection("products");
+        const product = productsCollection.doc(productId);
+
+        product.get().then((doc) => {
+            setProduct({id:doc.id, ...doc.data()});  
+        }).catch((error) => {
+            alert("Error loading products");
+        }).finally(() => {
+            setLoading(false);
+        });;
     }, [productId])
 
     return (

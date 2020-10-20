@@ -3,13 +3,13 @@ import products from './products';
 class ProductsAPI {
     static getProducts() {
         return new Promise((resolve) => {
-            setTimeout(() => resolve(products), 2000);
+            setTimeout(() => resolve(products), 500);
         })
     }
 
     static getProduct(id) {
         return new Promise((resolve) => {
-            setTimeout(() => resolve(products.find(x=> x.id === id)), 3000);
+            setTimeout(() => resolve(products.find(x=> x.id === id)), 500);
         })
     }
 }

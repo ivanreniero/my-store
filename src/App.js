@@ -24,8 +24,11 @@ function App() {
               <TotalProvider>        
         <NavBar />  
           <Switch>
-            <Route path="/products/:productId" >
+            <Route exact path="/products/:productId" >
               <ProductDetailContainer />
+            </Route>
+            <Route exact path="/products/category/:categoryId" >
+              <Products />
             </Route>
             <Route exact path="/products">
               <Products />
