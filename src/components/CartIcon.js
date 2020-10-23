@@ -5,7 +5,7 @@ import Badge from '@material-ui/core/Badge';
 import { TotalContext } from '../context/totalContext';
 
 function CartIcon(){
-    const [total, setTotal] = useContext(TotalContext);
+    const [total] = useContext(TotalContext);
 
     return(
         <IconButton color="primary" aria-label="add to shopping cart">

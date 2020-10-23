@@ -63,6 +63,7 @@ function ProductList(props) {
                             productDescription={product.description} 
                             productMaxQuantity={product.maxQuantity}
                             productPrice={product.price}
+                            productImage={product.img}
                             loading={loading}/>
                     </Grid>
                 )}

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState} from 'react';
+import React, { useContext, useState} from 'react';
 import { CartContext } from '../../context/cartContext';
 import { makeStyles } from '@material-ui/core/styles';
 import {Link} from "react-router-dom";
@@ -11,6 +11,7 @@ import Dialog from '@material-ui/core/Dialog';
 import PropTypes from 'prop-types';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import CartForm from './CartForm';
 
 const useStyles = makeStyles((theme) => ({
     link: {
@@ -31,10 +32,10 @@ const useStyles = makeStyles((theme) => ({
  
     return (
       <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-        <DialogTitle id="simple-dialog-title">Success!!</DialogTitle>
+        <DialogTitle id="simple-dialog-title">Compra realizada con exito!</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-             Your order id is: {orderId}
+             Su id de compra es: {orderId}
           </DialogContentText>
         </DialogContent>    
       </Dialog>
@@ -47,64 +48,85 @@ const useStyles = makeStyles((theme) => ({
     orderId: PropTypes.string.isRequired,
   };
 
-
-
 function Cart() {
     const classes = useStyles();
     const [cart, setCart, getCartGroupedByProduct, getCartTotal, getCartItems] = useContext(CartContext);
     const [orderId, setOrderId] = useState("");
     const succesfullShop = false;
     const [open, setOpen] = React.useState(false);
+
+    const [form, setForm] = useState({nombre:"", apellido:"", telefono: "",email: "", repeatedEmail: ""});
+    
+    const clearForm = () => {
+      setForm(Object.assign({},form,{nombre:"", apellido:"", telefono: "",email: "", repeatedEmail:""}));
+      setFormOpen(false);
+    }
+
+  const validForm = () => { 
+      return (form.nombre !== "" && form.apellido !== "" && form.telefono !== "" && form.email !== "" && form.repeatedEmail !== "" && form.email === form.repeatedEmail);
+  }
+
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    const [formOpen, setFormOpen] = React.useState(false);
+
+    const handleFormOpen = () => {
+      setFormOpen(true);
+    };
+
+    const handleFormClose = () => {
+      setFormOpen(false);
+    };
     
     const addOrder = () => {
         const db = getFirestore();
         const ordersCollection = db.collection("orders");
         const newOrder = {
             buyer: {
-                name: "Hardcoded name",
-                phone: "Hardcoded phone",
-                email: "Hardcoded email",
+                name: form.nombre + " " + form.apellido,
+                phone: form.telefono,
+                email: form.email
             },
             items: getCartItems(),
             date: firebase.firestore.Timestamp.fromDate(new Date()),
+            status: "generada",
             total: getCartTotal()
         };
         ordersCollection.add(newOrder).then(({id}) => {
             setOrderId(id);
             handleClickOpen();
         }).catch((error) => {
-            alert("Error finalizing purchase");
+            alert("Error realizando la compra");
         });
     }
-
-    const handleClickOpen = () => {
-        setOpen(true);
-      };
-    
-      const handleClose = () => {
-        setOpen(false);
-      };
-
     if (cart.length > 0) {
         return (
             <div>
-                <h1>Shopping Cart</h1>
+                <h1>Carrito</h1>
                 <hr />
-                <h3>Products in cart</h3>
-                <ul>{getCartGroupedByProduct().map(cartItem => <li key={cartItem.product.id}> Product:{cartItem.product.name} Quantity: {cartItem.quantity}  Total: ${cartItem.quantity * cartItem.product.price}  </li>)}</ul>
-                <Button variant="contained" color="primary" className={classes.button} onClick={addOrder}>
-                    FINALIZE PURCHASE
+                <h3>Productos en el carrito</h3>
+                <ul>{getCartGroupedByProduct().map(cartItem => <li key={cartItem.product.id}> Producto:{cartItem.product.name} Cantidad: {cartItem.quantity}  Subtotal: ${cartItem.quantity * cartItem.product.price}  </li>)}</ul>
+                <p>Total: ${getCartTotal()}</p>
+                <Button variant="contained" color="primary" className={classes.button} onClick={handleFormOpen}>
+                    FINALIZAR COMPRA
                 </Button> 
+                <CartForm form={form} open={formOpen} clearForm={clearForm} onPurchase={addOrder} setForm={setForm}/>
                 <SimpleDialog open={open} onClose={handleClose} orderId={orderId}/>
             </div>
         )
     } else {
         return (
             <div>
-                <h1>Shopping Cart</h1>
+                <h1>Carrito</h1>
                 <hr />
-                <h3>Cart is empty</h3>  
-                <Link variant="button" color="textPrimary" className={classes.link} to="/products">Go to products</Link>      
+                <h3>El carrito esta vacio</h3>  
+                <Link variant="button" color="textPrimary" className={classes.link} to="/products">Ver productos</Link>      
             </div>
         )
     }

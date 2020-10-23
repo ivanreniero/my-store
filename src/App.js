@@ -43,7 +43,7 @@ function App() {
               <Cart />
             </Route>
             <Route exact path="/">
-              <Home greetings="Welcome to the Store"/>
+              <Home greetings="Nuestros productos"/>
             </Route>
           </Switch>
             </TotalProvider>

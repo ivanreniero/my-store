@@ -25,7 +25,7 @@ function CartProvider(props) {
     };
 
     function getCartItems(){
-        return cart.map(x => ({ id: x.product.id, name: x.product.name, price: x.product.price}));
+        return getCartGroupedByProduct().map(x => ({ id: x.product.id, name: x.product.name, price: x.product.price, quantity: x.quantity}));
     }
 
 

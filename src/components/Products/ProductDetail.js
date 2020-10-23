@@ -9,6 +9,7 @@ import Icon from '@material-ui/core/Icon';
 import { CartContext } from '../../context/cartContext';
 import { TotalContext } from '../../context/totalContext';
 
+
 const useStyles = makeStyles(theme => ({
     center : {
         minHeight: '70vh',
@@ -16,7 +17,11 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center'
-    }    
+    },
+    image: {
+        height: '200px',
+        width: '250px'
+    }  
 }))
 
 function ProductDetail(props) {
@@ -51,12 +56,12 @@ function ProductDetail(props) {
     } else {
         return (
         <div>
-            <h1>Product Details</h1>       
+            <h1>Detalles del producto</h1>       
             <hr />
-            <h3>{props.product.name}</h3>
+            <h2>{props.product.name}</h2>
+            <img className={classes.image} src={props.product.img} alt="Imagen del producto"></img>  
             <p>{props.product.description}</p>
             <p>$ {props.product.price}</p>
-            <p>Stock: {props.product.stock}</p>
             <ItemCount counter={counter} discount={discount} add={add} />
             <Button
                 variant="contained"
@@ -66,7 +71,7 @@ function ProductDetail(props) {
                             <AddShoppingCartIcon />
                         </Icon>}
                 >
-                ADD TO CART {counter} ITEMS
+                AGREGAR AL CARRITO {counter} PRODUCTOS
             </Button> 
         </div>
         )
